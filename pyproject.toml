@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "hbsc_utils"
+version = "0.1.0"
+description = "HBSC Python utils"
+authors = ["Hairy Bear Social Club"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+chia-blockchain = {git = "https://github.com/Chia-Network/chia-blockchain.git", tag = "1.3.0"}
+requests = "^2.27.1"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.931"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
