@@ -15,8 +15,10 @@ from chia.util.ints import uint16
 
 from .cat import get_tail_wrapped_puzhash
 
+class ChiaWrapperException(Exception):
+    pass
 
-class SpendNotFoundException(Exception):
+class SpendNotFoundException(ChiaWrapperException):
     pass
 
 
@@ -79,21 +81,25 @@ class ChiaFullNodeWrapper:
     async def __aexit__(self, *args):
         await self._client.session.close()
 
-    async def get_inner_address_for_cat(
-        self, record: CoinRecord, tail: str
-    ) -> Optional[str]:
-        """
-        Tries to get original XCH send address from CAT coin.
-        """
+    async def _get_spend(self, record: CoinRecord) -> CoinSpend:
         if not (
             spend := await self._client.get_puzzle_and_solution(
                 record.coin.parent_coin_info, record.confirmed_block_index
             )
         ):
             raise SpendNotFoundException(
-                f"Could not find spend for coin {record.name} not found."
+                f"Could not find spend for coin {record.name}."
             )
 
+        return spend
+
+    async def get_original_address_for_cat(
+        self, record: CoinRecord, tail: str
+    ) -> Optional[str]:
+        """
+        Tries to get original XCH send address from CAT coin.
+        """
+        spend = await self._get_spend(record)
         program = spend.solution.to_program()
 
         # TODO fix the below with newer knowledge
