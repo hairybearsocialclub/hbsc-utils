@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hbsc_utils"
-version = "0.1.0"
+version = "0.2.0"
 description = "HBSC Python utils"
 authors = ["Hairy Bear Social Club"]
 
