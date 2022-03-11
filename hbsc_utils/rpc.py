@@ -15,8 +15,10 @@ from chia.util.ints import uint16
 
 from .cat import get_tail_wrapped_puzhash
 
+
 class ChiaWrapperException(Exception):
     pass
+
 
 class SpendNotFoundException(ChiaWrapperException):
     pass
@@ -117,7 +119,8 @@ class ChiaFullNodeWrapper:
                 # hacky thing: try all create_coin paths until we hit the right one
                 path = f"frf{'r' * i}frf"
                 possible_original_puzhash = program.at(path).as_python()
-                if get_tail_wrapped_puzhash(
-                    possible_original_puzhash, tail
-                ) == encode_puzzle_hash(record.coin.puzzle_hash, "xch"):
+                if (
+                    get_tail_wrapped_puzhash(possible_original_puzhash, tail)
+                    == record.coin.puzzle_hash
+                ):
                     return encode_puzzle_hash(possible_original_puzhash, "xch")
