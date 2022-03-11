@@ -1,6 +1,6 @@
 # HBSC Chia Python utils
 
-A collection of Python utils to make Chia development easier. Made by the Hairy Bear Social Club.
+A collection of Python utils to make Chia development easier.
 
 ## RPC clients
 
