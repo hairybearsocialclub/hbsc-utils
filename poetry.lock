@@ -153,7 +153,6 @@ description = "Chia blockchain full node, farmer, timelord, and wallet."
 category = "main"
 optional = false
 python-versions = ">=3.7, <4"
-develop = false
 
 [package.dependencies]
 aiofiles = "0.7.0"
@@ -166,8 +165,8 @@ chiapos = "1.0.9"
 chiavdf = "1.0.5"
 click = "7.1.2"
 clvm = "0.9.7"
-clvm-rs = "0.1.19"
-clvm-tools = "0.4.3"
+clvm_rs = "0.1.19"
+clvm_tools = "0.4.3"
 colorama = "0.4.4"
 colorlog = "5.0.1"
 concurrent-log-handler = "0.9.19"
@@ -191,12 +190,6 @@ zstd = "1.5.0.4"
 dev = ["build", "pre-commit", "pytest", "pytest-asyncio", "pytest-xdist", "twine", "isort", "flake8", "mypy", "black (==21.12b0)", "aiohttp-cors", "ipython", "types-aiofiles", "types-click", "types-cryptography", "types-pkg-resources", "types-pyyaml", "types-setuptools", "pytest-monitor"]
 upnp = ["miniupnpc (==2.2.2)"]
 uvloop = ["uvloop"]
-
-[package.source]
-type = "git"
-url = "https://github.com/Chia-Network/chia-blockchain.git"
-reference = "1.3.0"
-resolved_reference = "0e7cc5a88393ef02b4057dd4bf894be2e73bc00b"
 
 [[package]]
 name = "chiabip158"
@@ -677,8 +670,8 @@ python-versions = "*"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.9"
-content-hash = "b3c210b2404d48ca08b5f61e290d4ccb199cfe8fad97df7255d9548d3b9baa43"
+python-versions = "^3.8"
+content-hash = "7aa8d997d183a1c65111e63d9795432e880d1509257684868aebec72acb05b89"
 
 [metadata.files]
 aiofiles = [
@@ -853,7 +846,9 @@ charset-normalizer = [
     {file = "charset-normalizer-2.0.12.tar.gz", hash = "sha256:2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597"},
     {file = "charset_normalizer-2.0.12-py3-none-any.whl", hash = "sha256:6881edbebdb17b39b4eaaa821b438bf6eddffb4468cf344f09f89def34a8b1df"},
 ]
-chia-blockchain = []
+chia-blockchain = [
+    {file = "chia-blockchain-1.3.0.tar.gz", hash = "sha256:5a55e0b3add113d42097aee5f2122cfed35c20250051b113650ef5c95ff8763f"},
+]
 chiabip158 = [
     {file = "chiabip158-1.1-cp310-cp310-macosx_10_14_x86_64.whl", hash = "sha256:68d8c80800a68bd7ff5308f6247828d49d750441da83e672bd9d08cf0db46f4e"},
     {file = "chiabip158-1.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:81072038958de93e2a3eac03d3be866187f1d9c0f5210253dd18074c6b9c14e0"},
