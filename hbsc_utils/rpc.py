@@ -2,8 +2,6 @@ import os
 from pathlib import Path
 from typing import Tuple, Optional
 
-from clvm_tools.binutils import disassemble
-
 from chia.rpc.full_node_rpc_client import FullNodeRpcClient
 from chia.rpc.wallet_rpc_client import WalletRpcClient
 from chia.types.coin_record import CoinRecord
@@ -13,7 +11,9 @@ from chia.util.config import load_config
 from chia.util.default_root import DEFAULT_ROOT_PATH
 from chia.util.ints import uint16
 
-from .cat import get_tail_wrapped_puzhash
+from .cat import get_tail_wrapped_puzhash, get_tail_wrapped_address
+from .spends import extract_payments_from_program
+
 
 
 class ChiaWrapperException(Exception):
@@ -104,23 +104,16 @@ class ChiaFullNodeWrapper:
         spend = await self._get_spend(record)
         program = spend.solution.to_program()
 
-        # TODO fix the below with newer knowledge
         try:
             # offer?
-            return encode_puzzle_hash(program.at("ffrff").as_python(), "xch")
+            # TODO test with an offer with multiple outputs
+            possible_puzhash = program.at("ffrff").as_python()
+            if get_tail_wrapped_puzhash(possible_puzhash, tail) == record.coin.puzzle_hash:
+                return encode_puzzle_hash(possible_puzhash, "xch")
         except:
             # normal spend?
-            inner_solution = disassemble(program.at("frfr"))
-            create_coin_count = inner_solution.count("(51")
-            if create_coin_count == 1:
-                return encode_puzzle_hash(program.at("frfrfrf").as_python(), "xch")
-
-            for i in range(1, create_coin_count + 1):
-                # hacky thing: try all create_coin paths until we hit the right one
-                path = f"frf{'r' * i}frf"
-                possible_original_puzhash = program.at(path).as_python()
-                if (
-                    get_tail_wrapped_puzhash(possible_original_puzhash, tail)
-                    == record.coin.puzzle_hash
-                ):
-                    return encode_puzzle_hash(possible_original_puzhash, "xch")
+            inner_solution = program.at("frfr")
+            payments = extract_payments_from_program(inner_solution)
+            for p in payments:
+                if get_tail_wrapped_puzhash(p.puzzle_hash, tail) == record.coin.puzzle_hash:
+                    return encode_puzzle_hash(p.puzzle_hash, "xch")
