@@ -83,14 +83,14 @@ class ChiaFullNodeWrapper:
     async def __aexit__(self, *args):
         await self._client.session.close()
 
-    async def _get_spend(self, record: CoinRecord) -> CoinSpend:
+    async def _get_parent_spend(self, record: CoinRecord) -> CoinSpend:
         if not (
             spend := await self._client.get_puzzle_and_solution(
                 record.coin.parent_coin_info, record.confirmed_block_index
             )
         ):
             raise SpendNotFoundException(
-                f"Could not find spend for coin {record.name}."
+                f"Could not find spend for coin {record.coin.parent_coin_info}."
             )
 
         return spend
@@ -101,8 +101,8 @@ class ChiaFullNodeWrapper:
         """
         Tries to get original XCH send address from CAT coin.
         """
-        spend = await self._get_spend(record)
-        program = spend.solution.to_program()
+        parent_spend = await self._get_parent_spend(record)
+        program = parent_spend.solution.to_program()
 
         try:
             # offer?
